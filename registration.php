@@ -38,6 +38,7 @@
             $passwordRepeat = $_POST["repeat_password"];
             $passwordDash = password_hash($password, PASSWORD_DEFAULT);
             $errors = array();
+            $phone = $_POST["country"] . $_POST["number"];
 
             if (empty($fullname) || empty($email) || empty($password) || empty($passwordRepeat) || empty($passwordRepeat)) {
                 array_push($errors, "All fields are required");
@@ -60,6 +61,13 @@
 
             }
 
+            $phonevalidation = "SELECT * FROM user WHERE phone = '$phone'";
+            $validationresult = $conn->query($phonevalidation);
+
+            if ($validationresult->rowCount() > 0) {
+                array_push($errors, "Phone already registered");
+            }
+
             if ($password !== $passwordRepeat) {
                 array_push($errors, "Password does not match");
             }
@@ -70,13 +78,14 @@
                 }
             } else {
 
-                $stmt = $conn->prepare("INSERT INTO user (full_name, email, password) VALUES (:full_name, :email,
-                :password)");
+                $stmt = $conn->prepare("INSERT INTO user (full_name, email, password, phone) VALUES (:full_name, :email,
+                :password, :phone)");
 
                 // Bind parameters
                 $stmt->bindParam(':full_name', $fullname);
                 $stmt->bindParam(':email', $email);
                 $stmt->bindParam(':password', $passwordDash);
+                $stmt->bindParam(':phone', $phone);
                 // Execute the query
                 $success = $stmt->execute();
 
@@ -106,6 +115,24 @@
                 <input type="password" class="form-control" name="repeat_password" placeholder="Confirm password:"
                     id="">
             </div>
+            <div class="d-flex mb-4 g-2">
+                <select class="rounded-left form-select" name="country" style="width: 120px;">
+                    <option selected value="+63">Ph +63</option>
+                    <option value="+54">Arg +54</option>
+                    <option value="+32">Bel +32</option>
+                    <option value="+591">Bol +591</option>
+                    <option value="+55">Bra +55</option>
+                    <option value="+56">Chi +56</option>
+                    <option value="+86">China +86</option>
+                    <option value="+57">Col +57</option>
+                    <option value="+506">Costa +506</option>
+                    <option value="+53">Cuba +53</option>
+                    <option value="+357">Cyp +357</option>
+                </select>
+                <input type="text" class="form-control" name="number" style="margin-left:10px; width: 200px;"
+                    id="number" placeholder="9123456789">
+            </div>
+
             <div class="form-btn mb-2">
                 <input type="submit" class="btn btn-primary" value="Register" name="Submit">
             </div>

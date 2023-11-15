@@ -7,13 +7,15 @@ if (!isset($_SESSION["user"])) {
 $userData = $_SESSION['user'];
 $fullName = $userData['full_name'];
 $userid = $userData['id'];
+$phone = $userData['phone'];
 $balance = $data['balance'];
-$phone = "";
 $successMessage = "";
 $continue = false;
 
 require_once "database.php";
-$sql = "SELECT * FROM sms WHERE user_id = $userid ORDER BY id DESC";
+
+// to check all the messages for phone number associated to our the user
+$sql = "SELECT * FROM sms WHERE phone = $phone ORDER BY id DESC";
 $result = $conn->query($sql);
 
 //Get the row count
@@ -136,18 +138,24 @@ $rowCount = $result->rowCount();
 
                 if ($rowCount == 0)
                     echo "
-          <div clas='ifEmpty'>
-            <p class='lead text-center'><em>Empty!</em><p/> 
-          </div>";
+                    <div clas='ifEmpty'>
+                        <p class='lead text-center'><em>Empty!</em><p/> 
+                    </div>";
 
                 // read data of each row        
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+                    // to get the sender name
+                    $senderId = $row["user_id"];
+                    $senderNameQuery = "SELECT * FROM user WHERE id = $senderId";
+                    $sender = $conn->query($senderNameQuery)->fetch(PDO::FETCH_ASSOC);
+
                     echo "
               <div class='border border-primary rounded p-2 mb-2'>
                 <div class=''>
-                      <div class='number text-decoration-underline d-flex flex-row justify-content-between'>
-                          <h5>$row[phone]</h5>
-                          <a class='btn btn-info' href='/index.php?phone=$row[phone]'>
+                      <div class='number d-flex flex-row justify-content-between'>
+                          <h5>$sender[full_name]</h5>
+                          <a class='btn btn-info' href='/index.php?phone=$sender[phone]'>
                             <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-send' viewBox='0 0 16 16'>
                              <path d='M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z'/>
                             </svg>

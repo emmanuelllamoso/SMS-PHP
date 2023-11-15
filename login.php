@@ -55,7 +55,8 @@ if (isset($_SESSION["user"])) {
                     session_start();
                     $userData = array(
                         'id' => $row["id"],
-                        'full_name' => $row['full_name']
+                        'full_name' => $row['full_name'],
+                        'phone' => $row['phone']
                     );
                     $_SESSION["user"] = $userData;
                     header("Location: index.php");

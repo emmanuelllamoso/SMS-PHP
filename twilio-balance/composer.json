@@ -1,0 +1,17 @@
+{
+    "name": "pogi/twilio-balance",
+    "autoload": {
+        "psr-4": {
+            "Pogi\\TwilioBalance\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Emmanuel Llamoso",
+            "email": "emmanuelllamoso@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.8"
+    }
+}

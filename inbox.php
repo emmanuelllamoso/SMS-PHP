@@ -15,7 +15,7 @@ $continue = false;
 require_once "database.php";
 
 // to check all the messages for phone number associated to our the user
-$sql = "SELECT * FROM sms WHERE phone = $phone ORDER BY id DESC";
+$sql = "SELECT * FROM inbox WHERE phone = $phone ORDER BY id DESC";
 $result = $conn->query($sql);
 
 //Get the row count
@@ -132,7 +132,7 @@ $rowCount = $result->rowCount();
                 Inbox
             </h3>
 
-            <div class="content-message d-flex flex-column overflow-auto ">
+            <div class="content-message d-flex flex-column overflow-auto">
 
                 <?php
 
@@ -142,7 +142,7 @@ $rowCount = $result->rowCount();
                         <p class='lead text-center'><em>Empty!</em><p/> 
                     </div>";
 
-                // read data of each row        
+                //read data of each row        
                 while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
                     // to get the sender name
@@ -151,24 +151,30 @@ $rowCount = $result->rowCount();
                     $sender = $conn->query($senderNameQuery)->fetch(PDO::FETCH_ASSOC);
 
                     echo "
-              <div class='border border-primary rounded p-2 mb-2'>
-                <div class=''>
-                      <div class='number d-flex flex-row justify-content-between'>
-                          <h5>$sender[full_name]</h5>
-                          <a class='btn btn-info' href='/index.php?phone=$sender[phone]'>
-                            <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-send' viewBox='0 0 16 16'>
-                             <path d='M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z'/>
-                            </svg>
-                          </a>  
-                      </div>
-                    <div class='message-body'>
-                        <p>'$row[messageBody]'
-                        </p>
+                    
+                    <div class='row m-1 border border-primary p-1 rounded'>
+                        <div class='col-10'>
+                            <h4>$sender[full_name]</h4>
+                            <p>'$row[message]'</p>
+                        </div>
+                        <div class='col-2 d-flex flex-column gap-1'>
+                            <a class=' btn btn-info' href='/index.php?phone=$sender[phone]'>
+                                <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-send' viewBox='0 0 16 16'>
+                                <path d='M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z'/>
+                                </svg>
+                            </a>  
+                            <a class='btn btn-danger' href='/delete.php?idInbox=$row[id]'>
+                                <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-trash' viewBox='0 0 16 16'>
+                                    <path d='M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z'/>
+                                    <path d='M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z'/>
+                                </svg>
+                            </a>  
+                        </div>
                     </div>
-                </div>
-              </div> ";
+                    ";
                 }
                 ?>
+
 
             </div>
         </div>

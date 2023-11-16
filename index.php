@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   if (isset($_POST["country"])) {
     $phone = $_POST["country"] . $_POST["number"];
+    $message = $_POST['message'];
   }
 
   //send message
@@ -50,17 +51,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Store message to database
   require_once "database.php";
 
+  //sent sms 
   $stmt = $conn->prepare("INSERT INTO sms (user_id, message_id, phone, messageBody) VALUES (:user_id, :message_id, :phone, :messageBody)");
 
   // Bind parameters
   $stmt->bindParam(':user_id', $userid);
   $stmt->bindParam(':message_id', $MIS);
   $stmt->bindParam(':phone', $phone);
-  $stmt->bindParam(':messageBody', $_POST['message']);
+  $stmt->bindParam(':messageBody', $message);
 
   // Execute the query
   $stmt->execute();
   $successMessage = "Message sent!";
+
+  // for inbox
+  $insertInbox = $conn->prepare("INSERT INTO inbox (user_id, phone, message) VALUES (:user_id,  :phone, :message)");
+  // Bind parameters
+  $insertInbox->bindParam(':user_id', $userid);
+  $insertInbox->bindParam(':phone', $phone);
+  $insertInbox->bindParam(':message', $message);
+  $insertInbox->execute();
+
 }
 ?>
 

@@ -15,38 +15,12 @@ $fullName = $userData['full_name'];
 $userid = $userData['id'];
 $profilePicture = "";
 
-function send()
-{
-  require __DIR__ . '/vendor/autoload.php';
-
-  // Your Account SID and Auth Token from console.twilio.com
-  $sid = "AC489b1ba5f8de3366d43be2308a4a39cc";
-  $token = "0d0337410de1fcc99534979eea54c43c";
-  $client = new Twilio\Rest\Client($sid, $token);
-
-  // Use the Client to make requests to the Twilio REST API
-  $client->messages->create(
-    // The number you'd like to send the message to
-    $_POST["country"] . $_POST["number"],
-    [
-      // A Twilio phone number you purchased at https://console.twilio.com
-      'from' => '+12512734637',
-      // The body of the text message you'd like to send
-      'body' => $_POST['message']
-    ]
-  );
-  return $client;
-}
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   if (isset($_POST["country"])) {
     $phone = $_POST["country"] . $_POST["number"];
     $message = $_POST['message'];
   }
-
-  //send message
-  //$MIS = send();
 
   // Store message to database
   require_once "database.php";

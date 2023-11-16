@@ -20,8 +20,8 @@ function send()
     require __DIR__ . '/vendor/autoload.php';
 
     // Your Account SID and Auth Token from console.twilio.com
-    $sid = "xxxx";
-    $token = "xxxx";
+    $sid = "AC489b1ba5f8de3366d43be2308a4a39cc";
+    $token = "0d0337410de1fcc99534979eea54c43c";
     $client = new Twilio\Rest\Client($sid, $token);
 
     // Use the Client to make requests to the Twilio REST API
